@@ -5,12 +5,18 @@ from datetime import datetime
 
 def scan_port(target, port):
     try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.settimeout(0.5)
-        result = s.connect_ex((target, port))
-        if result == 0:
-            print(f"[+] Port {port} is OPEN")
-        s.close()
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            s.settimeout(0.5)
+            result = s.connect_ex((target, port))
+            if result == 0:
+                print(f"[+] Port {port} is OPEN")
+                try:
+                    s.send(b"HEAD / HTTP/1.0\r\n\r\n")
+                    banner = s.recv(1024).decode().strip()
+                    if banner:
+                        print(f"    Banner: {banner.splitlines()[0]}")
+                except:
+                    pass
     except:
         pass
 

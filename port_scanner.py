@@ -1,4 +1,5 @@
 import socket
+import argparse
 import sys
 from datetime import datetime
 
@@ -13,14 +14,17 @@ def scan_port(target, port):
     except:
         pass
 
-def main():
-    if len(sys.argv) != 4:
-        print("Usage: python port_scanner.py <target> <start_port> <end_port>")
-        sys.exit()
 
-    target = sys.argv[1]
-    start_port = int(sys.argv[2])
-    end_port = int(sys.argv[3])
+def main():
+    parser = argparse.ArgumentParser(description="Simple Python Port Scanner")
+    parser.add_argument("target", help="Target IP address")
+    parser.add_argument("start_port", type=int, help="Start port")
+    parser.add_argument("end_port", type=int, help="End port")
+    args = parser.parse_args()
+
+    target = args.target
+    start_port = args.start_port
+    end_port = args.end_port
 
     print(f"\nScanning Target: {target}")
     print(f"Time started: {datetime.now()}")
@@ -31,6 +35,7 @@ def main():
 
     print("-" * 50)
     print(f"Scan completed at: {datetime.now()}")
+
 
 if __name__ == "__main__":
     main()

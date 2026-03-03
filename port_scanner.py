@@ -2,6 +2,7 @@ import socket
 import argparse
 import sys
 from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
 
 def scan_port(target, port):
     try:
@@ -36,8 +37,9 @@ def main():
     print(f"Time started: {datetime.now()}")
     print("-" * 50)
 
-    for port in range(start_port, end_port + 1):
-        scan_port(target, port)
+    with ThreadPoolExecutor(max_workers=100) as executor:
+    executor.map(lambda port: scan_port(target, port),
+                 range(start_port, end_port + 1))
 
     print("-" * 50)
     print(f"Scan completed at: {datetime.now()}")
